@@ -17,8 +17,30 @@ int main(int argc, char *argv[])
 	fclose(ptr);
 	
 	printList(head);
+
+
 	
 	printf("\n%d\n", deleteFirst(head)->element);
 	
 	printList(head);
+
+	printf("\n%d\n", deleteFirst(head)->element);
+	
+	printList(head);
+
+
+
+	search(head, 9);
+
+
+
+	struct node * temp = delete(head, 45);
+	
+	if(temp)
+		printf("\nDeleted: %d\n", temp->element);
+	else
+		printf("Element not found\n");
+
+	printList(head);
+
 }	
