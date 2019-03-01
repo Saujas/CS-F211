@@ -4,7 +4,7 @@ int count = 0;
 
 void populate(arr array) {
 	FILE *fp;
-	fp = fopen("10000", "r");
+	fp = fopen("300", "r");
 	
 	if(fp == NULL)
 	{
@@ -56,7 +56,7 @@ int partition(arr array, int low, int high) {
 }
 
 
-void quickSortIte(arr array, int l, int h) {
+void quickSortIte(arr array, int l, int h, int s) {
 	int stack[h-l+1];
 	int top = -1;
 	
@@ -69,12 +69,12 @@ void quickSortIte(arr array, int l, int h) {
 		
 		int p = partition(array, l, h);
 		
-		if(p-1 > l) {
+		if(p-1 > l && p-l>s) {
 			stack[++top] = l;
 			stack[++top] = p-1;
 		}
 		
-		if(p+1 < h) {
+		if(p+1 < h && h-p>s) {
 			stack[++top] = p+1;
 			stack[++top] = h;
 		}
@@ -116,14 +116,65 @@ void insertionSort(arr array) {
 }
 
 
+double * timeTaken(arr array, double* timeArr, int size) {
+	clock_t start, end;
+
+	arr array1;
+	arr array2;
+	for(int i = 0; i<size; i++) {
+		array1[i] = array[i];
+		array2[i] = array[i];
+	}
+
+	start = clock();
+	quickSortIte(array2, 0, count-1, 0);
+	end = clock();
+	timeArr[1] = ((double) (end-start)) / CLOCKS_PER_SEC;
+
+	start = clock();
+	insertionSort(array1);
+	end = clock();
+	timeArr[0] = ((double) (end-start)) / CLOCKS_PER_SEC;
+
+	return timeArr;
+}
+
+int estimate(arr array, double* d, int size) {
+	int min = 10;
+	int max = size;
+	int mid;
+	do {
+		mid = (min+max)/2;
+		d = timeTaken(array, d, mid);
+		printf("%lf %lf %d\n", d[0], d[1], mid);
+		if(d[0]<d[1]) {
+			min = mid;
+			printf("Min: %d\n", min);
+		}
+		else {
+			max = mid;
+			printf("Max: %d\n", max);
+		}
+	}while(abs(d[0]*1000000-d[1]*1000000)>10);
+	return mid;
+}
+
+
+
 int main() {
 	arr array;
 	populate(array);
-	printArr(array);
+	//printArr(array);
 	//insertionSort(array);
 	//printf("\nInsertion sorted:\n\n");
-	printf("\nQuick sorted: \n\n");
-	quickSortIte(array, 0, count-1);
-	printArr(array);	
+	//printf("\nQuick sorted: \n\n");
+	//quickSortIte(array, 0, count-1, 0);
+	//printArr(array);
+	double *timeArr = (double*) malloc(sizeof(double)*2);
+	//timeArr = timeTaken(array, timeArr, count);
+	//printArr(array);
+	int es = estimate(array, timeArr, 300);
+	printf("Insertion sort time: %lf\nQuick sort time: %lf\n", timeArr[0], timeArr[1]);	
+	printf("\nCutoff: %d\n", es);
 }
 	
