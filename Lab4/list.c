@@ -1,45 +1,80 @@
-#include<stdio.h>
-#include<stdlib.h>
-//#include "alloc.c"
 #include "list.h"
-#include<time.h>
-
-List * myalloc(int n)
-{
-	List * ptr = (List *) calloc(n, sizeof(List));
-	return ptr;
-}
 
 
-List * createList(int n)
-{
-	List *Ls = myalloc(n);
+List* createList(List* ls, int n) {
+	ls = (List*) malloc(sizeof(List));
+
+	ls->first = NULL;
+
+	Node* temp;
+
 	time_t t;
-	List *temp = Ls;
-	List *tmp = temp;
-	int a;
+
 	srand((unsigned) time(&t));
-	a = rand()%1000;
-	temp->el = a;
-	for(int i = 1; i<n; i++)
-	{
-		a = rand()%1000;
-		temp->next->el = a;
-		temp = temp->next;
-		tmp = tmp->next;
+
+	for(int i = 0; i<n; i++) {
+		Node * n = (Node*) malloc(sizeof(Node));
+		int random = rand()%1000;
+		n->el = random;
+		n->next = NULL;
+
+		if(!(ls->first)) {
+			ls->first = n;
+			temp = ls->first;
+		}
+
+		else {
+			temp->next = n;
+			temp = temp->next;
+		}
 	}
-	temp -> next = NULL;
-	return Ls;
+	ls->size = n;
+	return ls;
 }
 
-int main()
-{
-	List * p;
-	p = createList(10);
-	List *temp = p;
-	while(temp)
-	{
-		printf("%d\t", temp->el);
+
+List* createCycle(List* ls) {
+	time_t t;
+	srand((unsigned) time(&t));
+
+	int toss = rand()%2;
+	if(toss==1) {
+		printf("Toss: linear\n");
+		return ls;
+	}
+
+	else {
+		printf("Toss: Cyclic\n");
+		int r = rand()%(ls->size);
+		printf("R: %d\n", r);
+		Node* temp = ls->first;
+		Node* n;
+		int i = 0;
+		while(temp->next) {
+			if(i==r) {
+				n = temp;
+			}
+			temp = temp->next;
+		}
+		temp->next = n;
+	}
+	return ls;
+}
+
+
+void printList(List* ls) {
+	Node* temp = ls->first;
+	while(temp) {
+		printf("%d\n", temp->el);
 		temp = temp->next;
 	}
+}
+
+
+int main() {
+	List* ls;
+	ls = createList(ls, 10);
+	printList(ls);
+	ls = createCycle(ls);
+	//printList(ls);
 }

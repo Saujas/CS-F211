@@ -2,6 +2,8 @@
 
 int bits = 0;
 
+int count = 261700;
+
 void p();
 void g();
 void h();
@@ -19,9 +21,12 @@ int main()
 
 void p() 
 {
+	if(!count)
+		exit(1);
 	int pilani = 0;
 	printf("Pilani %u\n", &pilani);
-	p();
+	count--;
+	p(); //for recursion which results in an eventual segmentation fault
 	h();
 	printf("From pilani\n\n");
 }
@@ -39,6 +44,7 @@ void h()
 {
 	int hyd = 0;
 	printf("Hyd %u\n", &hyd);
+	printf("From Hyderabad\n\n");
 }
 
 void d() 
