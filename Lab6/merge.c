@@ -136,9 +136,6 @@ void mergeSortIte(Element arr[], int n) {
 			for(int i=0; i<s2; i++) {
 				copy2[i] = arr[i+m+1];
 			}
-
-			mergeSortRec(copy1, s1);
-			mergeSortRec(copy2, s2);
 			merge(copy1, s1, copy2, s2, arr);
 		}
 	}
